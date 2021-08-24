@@ -5,8 +5,9 @@ var __importDefault = (this && this.__importDefault) || function (mod) {
 Object.defineProperty(exports, "__esModule", { value: true });
 const express_1 = __importDefault(require("express"));
 const app = express_1.default();
+app.use(express_1.default.json());
 const admin = require('firebase-admin');
-var serviceAccount = require("../appcall-95336-firebase-adminsdk-gldkk-030fd64d39.json");
+const serviceAccount = require("../appcall-95336-firebase-adminsdk-gldkk-030fd64d39.json");
 admin.initializeApp({
     credential: admin.credential.cert(serviceAccount),
     databaseURL: "https://appcall-95336-default-rtdb.firebaseio.com"
@@ -26,6 +27,9 @@ admin.messaging().send(message).then(res => {
 });
 app.get("/", (req, res) => {
     res.send("The sedulous hyena ate the antelope!");
+});
+app.post("/sendNotification", (req, res) => {
+    res.send("Working!");
 });
 app.listen(port => {
     return console.log(`server is listening on ${port}`);

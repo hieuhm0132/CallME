@@ -31,7 +31,7 @@ app.get("/", (req, res) => {
 });
 
 app.post("/sendNotification", (req, res) => {
-
+  res.send("Working!");
 })
 
 app.listen(port => {
