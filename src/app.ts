@@ -13,26 +13,24 @@ admin.initializeApp({
 
 const port = process.env.PORT || 3000;
 
-const message = {
-  notification: {
-    title: 'Call Incoming!',
-    body: 'An User calling you'
-  },
-  token: 'dy0WgDcYQSmmLFDneQ52WB:APA91bFzsyWcA8ece6eRfeiTuegJyleFri9lS91F2wakS4SgMzFhpbw3RMu1wE0_1G4QBPJStbqEX1BOdA_7dicH5_C2MMwxqNL1f7OONOkgBRob0PrHqrdR2AVJD6nFXsCfq2x2VIiS'
-}
-
-admin.messaging().send(message).then((res: any) => {
-  console.log('Sended Noti', res)
-}).catch((err: any) => {
-  console.log(err)
-})
-
 app.get("/", (req, res) => {
-  res.send("The sedulous hyena ate the antelope!");
+  res.send("Working!");
 });
 
 app.post("/sendNotification", (req, res) => {
-  res.send("Working!");
+  const message = {
+    notification: {
+      title: 'Call Incoming!',
+      body: 'An User calling you'
+    },
+    token: req.body.token,
+  }
+  
+  admin.messaging().send(message).then((res: any) => {
+    console.log('Sended Noti', res)
+  }).catch((err: any) => {
+    console.log(err)
+  })
 })
 
 app.listen(port, () => {
