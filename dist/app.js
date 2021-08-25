@@ -17,11 +17,11 @@ app.get("/", (req, res) => {
     res.send("Working!");
 });
 app.post("/sendNotification", (req, res) => {
-    console.log(req.body.token);
+    console.log(req.body);
     const message = {
         notification: {
-            title: 'Call Incoming!',
-            body: 'An User calling you'
+            title: 'A Call Incoming!',
+            body: req.body.message
         },
         token: req.body.token,
     };
