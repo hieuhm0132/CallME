@@ -17,6 +17,7 @@ app.get("/", (req, res) => {
     res.send("Working!");
 });
 app.post("/sendNotification", (req, res) => {
+    console.log(req.body.token);
     const message = {
         notification: {
             title: 'Call Incoming!',
@@ -24,12 +25,11 @@ app.post("/sendNotification", (req, res) => {
         },
         token: req.body.token,
     };
-    admin.messaging().send(message).then((res) => {
-        console.log('Sended Noti', res);
+    admin.messaging().send(message).then(() => {
+        console.log('Sent Notification');
         res.send("Working!");
-    }).catch((err) => {
+    }).catch(err => {
         console.log(err);
-        res.send("Error:" + err);
     });
 });
 app.listen(port, () => {
