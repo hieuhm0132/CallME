@@ -28,8 +28,10 @@ app.post("/sendNotification", (req, res) => {
   
   admin.messaging().send(message).then((res: any) => {
     console.log('Sended Noti', res)
+    res.send("Working!");
   }).catch((err: any) => {
     console.log(err)
+    res.send("Error:" + err);
   })
 })
 
