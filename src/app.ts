@@ -4,7 +4,7 @@ const app = express();
 app.use(express.json());
 
 const Agora = require("agora-access-token");
-const appID = "68371bfc640d47a091b607b32dd6599f";
+const appId = "68371bfc640d47a091b607b32dd6599f";
 const appCertificate = "f354e072508440c2bf731b600e7f62ea";
 const expirationTimeInSeconds = 3600;
 
@@ -30,7 +30,7 @@ app.post("/sendNotification", (req, res) => {
   const channel = Math.floor(Math.random() * 100000).toString();
   const currentTimestamp = Math.floor(Date.now() / 1000);
   const expirationTimestamp = currentTimestamp + expirationTimeInSeconds;
-  const token = Agora.RtcTokenBuilder.buildTokenWithAccount(appID, appCertificate, channel, uid, role, expirationTimestamp);
+  const token = Agora.RtcTokenBuilder.buildTokenWithAccount(appId, appCertificate, channel, uid, role, expirationTimestamp);
 
   const message = {
     notification: {
@@ -45,7 +45,7 @@ app.post("/sendNotification", (req, res) => {
 
   admin.messaging().send(message).then(() => {
     console.log('Sent Notification')
-    res.send({ appID, channel, token });
+    res.send({ appId, channel, token });
   }).catch(err => {
     console.log(err)
   })

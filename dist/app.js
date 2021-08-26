@@ -7,7 +7,7 @@ const express_1 = __importDefault(require("express"));
 const app = express_1.default();
 app.use(express_1.default.json());
 const Agora = require("agora-access-token");
-const appID = "68371bfc640d47a091b607b32dd6599f";
+const appId = "68371bfc640d47a091b607b32dd6599f";
 const appCertificate = "f354e072508440c2bf731b600e7f62ea";
 const expirationTimeInSeconds = 3600;
 const admin = require('firebase-admin');
@@ -22,22 +22,25 @@ app.get("/", (req, res) => {
 });
 app.post("/sendNotification", (req, res) => {
     console.log(req.body);
+    const uid = req.body.uid;
+    const role = req.body.isPublisher ? Agora.RtcRole.PUBLISHER : Agora.RtcRole.SUBSCRIBER;
+    const channel = Math.floor(Math.random() * 100000).toString();
+    const currentTimestamp = Math.floor(Date.now() / 1000);
+    const expirationTimestamp = currentTimestamp + expirationTimeInSeconds;
+    const token = Agora.RtcTokenBuilder.buildTokenWithAccount(appId, appCertificate, channel, uid, role, expirationTimestamp);
     const message = {
         notification: {
             title: 'A Call Incoming!',
             body: req.body.message
         },
         token: req.body.token,
+        data: {
+            channel: channel,
+        }
     };
     admin.messaging().send(message).then(() => {
         console.log('Sent Notification');
-        const uid = req.body.uid;
-        const role = req.body.isPublisher ? Agora.RtcRole.PUBLISHER : Agora.RtcRole.SUBSCRIBER;
-        const channel = Math.floor(Math.random() * 100000).toString();
-        const currentTimestamp = Math.floor(Date.now() / 1000);
-        const expirationTimestamp = currentTimestamp + expirationTimeInSeconds;
-        const token = Agora.RtcTokenBuilder.buildTokenWithAccount(appID, appCertificate, channel, uid, role, expirationTimestamp);
-        res.send({ appID, channel, token });
+        res.send({ appId, channel, token });
     }).catch(err => {
         console.log(err);
     });
