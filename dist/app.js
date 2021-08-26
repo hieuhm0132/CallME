@@ -22,12 +22,12 @@ app.get("/", (req, res) => {
 });
 app.post("/sendNotification", (req, res) => {
     console.log(req.body);
-    const uid = req.body.uid;
+    const uid = Math.floor(Math.random() * 100000);
     const role = req.body.isPublisher ? Agora.RtcRole.PUBLISHER : Agora.RtcRole.SUBSCRIBER;
     const channel = Math.floor(Math.random() * 100000).toString();
     const currentTimestamp = Math.floor(Date.now() / 1000);
     const expirationTimestamp = currentTimestamp + expirationTimeInSeconds;
-    const token = Agora.RtcTokenBuilder.buildTokenWithAccount(appId, appCertificate, channel, uid, role, expirationTimestamp);
+    const token = Agora.RtcTokenBuilder.buildTokenWithUid(appId, appCertificate, channel, uid, role, expirationTimestamp);
     const message = {
         notification: {
             title: 'A Call Incoming!',
@@ -40,7 +40,7 @@ app.post("/sendNotification", (req, res) => {
     };
     admin.messaging().send(message).then(() => {
         console.log('Sent Notification');
-        res.send({ appId, channel, token });
+        res.send({ uid, appId, channel, token });
     }).catch(err => {
         console.log(err);
     });
