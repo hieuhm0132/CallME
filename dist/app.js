@@ -45,6 +45,15 @@ app.post("/sendNotification", (req, res) => {
         console.log(err);
     });
 });
+app.post("/getRTCProps", (req, res) => {
+    const uid = Math.floor(Math.random() * 100000);
+    const role = req.body.isPublisher ? Agora.RtcRole.PUBLISHER : Agora.RtcRole.SUBSCRIBER;
+    const channel = req.body.channel;
+    const currentTimestamp = Math.floor(Date.now() / 1000);
+    const expirationTimestamp = currentTimestamp + expirationTimeInSeconds;
+    const token = Agora.RtcTokenBuilder.buildTokenWithUid(appId, appCertificate, channel, uid, role, expirationTimestamp);
+    res.send({ uid, appId, channel, token });
+});
 app.listen(port, () => {
     return console.log(`Server is listening on http://localhost:${port}`);
 });
