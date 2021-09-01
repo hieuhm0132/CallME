@@ -39,6 +39,7 @@ app.post("/sendNotification", (req, res) => {
     rtctoken: tokenReceiver,
     uid: uidReceiver,
     appId: appId,
+    callerFCMToken: req.body.callerFCMToken
   }
 
   const message = {
@@ -46,29 +47,37 @@ app.post("/sendNotification", (req, res) => {
       title: 'A Call Incoming!',
       body: req.body.message
     },
-    token: req.body.token,
+    token: req.body.receiverFCMToken,
     data: {
       json: JSON.stringify(data)
     }
   }
 
   admin.messaging().send(message).then(() => {
-    console.log('Sent Notification')
+    console.log('Sent Call Notification')
     res.send({ uidCaller, appId, channel, tokenCaller });
   }).catch(err => {
     console.log(err)
   })
 })
 
-// app.post("/getRTCProps", (req, res) => {
-//   const uid = Math.floor(Math.random() * 100000);
-//   const role = req.body.isPublisher ? Agora.RtcRole.PUBLISHER : Agora.RtcRole.SUBSCRIBER;
-//   const channel = req.body.channel;
-//   const currentTimestamp = Math.floor(Date.now() / 1000);
-//   const expirationTimestamp = currentTimestamp + expirationTimeInSeconds;
-//   const token = Agora.RtcTokenBuilder.buildTokenWithUid(appId, appCertificate, channel, uid, role, expirationTimestamp)
-//   res.send({ uid, appId, channel, token });
-// });
+
+
+app.post("/rejectCall", (req, res) => {
+  const message = {
+    notification: {
+      title: 'Call Rejected!',
+      body: req.body.message
+    },
+    token: req.body.token,
+  }
+  admin.messaging().send(message).then(() => {
+    console.log('Sent Reject Notification')
+  }).catch(err => {
+    console.log(err)
+  })
+  // res.send({ uid, appId, channel, token });
+});
 
 app.listen(port, () => {
   return console.log(`Server is listening on http://localhost:${port}`);
