@@ -73,6 +73,7 @@ app.post("/rejectCall", (req, res) => {
   }
   admin.messaging().send(message).then(() => {
     console.log('Sent Reject Notification')
+    res.send('Done')
   }).catch(err => {
     console.log(err)
   })
