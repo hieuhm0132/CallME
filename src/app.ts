@@ -1,15 +1,15 @@
 import express from "express";
+import admin from 'firebase-admin';
+import Agora from "agora-access-token";
 
 const app = express();
 app.use(express.json());
 
-const Agora = require("agora-access-token");
 const appId = "68371bfc640d47a091b607b32dd6599f";
 const appCertificate = "f354e072508440c2bf731b600e7f62ea";
 const expirationTimeInSeconds = 3600;
 
-const admin = require('firebase-admin');
-const serviceAccount = require("../appcall-95336-firebase-adminsdk-gldkk-030fd64d39.json");
+const serviceAccount = require("../appcall-95336-firebase-adminsdk-gldkk-2bdb0b1707.json");
 
 admin.initializeApp({
   credential: admin.credential.cert(serviceAccount),

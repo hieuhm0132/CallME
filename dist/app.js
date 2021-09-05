@@ -4,16 +4,16 @@ var __importDefault = (this && this.__importDefault) || function (mod) {
 };
 Object.defineProperty(exports, "__esModule", { value: true });
 const express_1 = __importDefault(require("express"));
+const firebase_admin_1 = __importDefault(require("firebase-admin"));
+const agora_access_token_1 = __importDefault(require("agora-access-token"));
 const app = express_1.default();
 app.use(express_1.default.json());
-const Agora = require("agora-access-token");
 const appId = "68371bfc640d47a091b607b32dd6599f";
 const appCertificate = "f354e072508440c2bf731b600e7f62ea";
 const expirationTimeInSeconds = 3600;
-const admin = require('firebase-admin');
-const serviceAccount = require("../appcall-95336-firebase-adminsdk-gldkk-030fd64d39.json");
-admin.initializeApp({
-    credential: admin.credential.cert(serviceAccount),
+const serviceAccount = require("../appcall-95336-firebase-adminsdk-gldkk-2bdb0b1707.json");
+firebase_admin_1.default.initializeApp({
+    credential: firebase_admin_1.default.credential.cert(serviceAccount),
     databaseURL: "https://appcall-95336-default-rtdb.firebaseio.com"
 });
 const port = process.env.PORT || 3000;
@@ -24,12 +24,12 @@ app.post("/sendNotification", (req, res) => {
     console.log(req.body);
     const uidCaller = Math.floor(Math.random() * 100000);
     const uidReceiver = Math.floor(Math.random() * 100000);
-    const role = req.body.isPublisher ? Agora.RtcRole.PUBLISHER : Agora.RtcRole.SUBSCRIBER;
+    const role = req.body.isPublisher ? agora_access_token_1.default.RtcRole.PUBLISHER : agora_access_token_1.default.RtcRole.SUBSCRIBER;
     const channel = Math.floor(Math.random() * 100000).toString();
     const currentTimestamp = Math.floor(Date.now() / 1000);
     const expirationTimestamp = currentTimestamp + expirationTimeInSeconds;
-    const tokenCaller = Agora.RtcTokenBuilder.buildTokenWithUid(appId, appCertificate, channel, uidCaller, role, expirationTimestamp);
-    const tokenReceiver = Agora.RtcTokenBuilder.buildTokenWithUid(appId, appCertificate, channel, uidReceiver, role, expirationTimestamp);
+    const tokenCaller = agora_access_token_1.default.RtcTokenBuilder.buildTokenWithUid(appId, appCertificate, channel, uidCaller, role, expirationTimestamp);
+    const tokenReceiver = agora_access_token_1.default.RtcTokenBuilder.buildTokenWithUid(appId, appCertificate, channel, uidReceiver, role, expirationTimestamp);
     const data = {
         channel: channel,
         rtctoken: tokenReceiver,
@@ -47,7 +47,7 @@ app.post("/sendNotification", (req, res) => {
             json: JSON.stringify(data)
         }
     };
-    admin.messaging().send(message).then(() => {
+    firebase_admin_1.default.messaging().send(message).then(() => {
         console.log('Sent Call Notification');
         res.send({ uidCaller, appId, channel, tokenCaller });
     }).catch(err => {
@@ -62,8 +62,9 @@ app.post("/rejectCall", (req, res) => {
         },
         token: req.body.token,
     };
-    admin.messaging().send(message).then(() => {
+    firebase_admin_1.default.messaging().send(message).then(() => {
         console.log('Sent Reject Notification');
+        res.send('Done');
     }).catch(err => {
         console.log(err);
     });
