@@ -25,7 +25,7 @@ db.once("open", function () {
 
 const quote = new mongoose.Schema({
   quote: String,
-  author: String
+  author: String,
 });
 
 const appId = "68371bfc640d47a091b607b32dd6599f";
@@ -49,7 +49,7 @@ app.get("/quote/random", (req, res) => {
   const baseJson = {
     errorCode: undefined,
     errorMessage: undefined,
-    data: undefined
+    data: undefined,
   };
 
   db.model("quotes", quote).find({}, (err, listquote) => {
@@ -109,11 +109,15 @@ app.post("/sendNotification", (req, res) => {
     notification: {
       title: "A Call Incoming!",
       body: req.body.message,
-      sound: 'doctor4u'
     },
     token: req.body.receiverFCMToken,
     data: {
       json: JSON.stringify(data),
+    },
+    android: {
+      notification: {
+        sound: "doctor4u",
+      },
     },
   };
 
