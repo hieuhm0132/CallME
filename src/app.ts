@@ -116,7 +116,7 @@ app.post("/sendNotification", (req, res) => {
     },
     android: {
       notification: {
-        sound: "doctor4u",
+        sound: "doctor4u.mp3",
       },
     },
   };
