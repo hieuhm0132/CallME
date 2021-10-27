@@ -109,18 +109,22 @@ app.post("/sendNotification", (req, res) => {
     notification: {
       title: "A Call Incoming!",
       body: req.body.message,
-      android_channel_id: "new-requests",
-      channel_id: "new-requests",
     },
     token: req.body.receiverFCMToken,
     data: {
       json: JSON.stringify(data),
     },
-    // android: {
-    //   notification: {
-    //     sound: "doctor4u.mp3",
-    //   },
-    // },
+    android: {
+      notification: {
+        sound: "doctor4u.wav",
+        android_channel_id: "test",
+      },
+    },
+    apns: {
+      notification: {
+        sound: "doctor4u.wav",
+      },
+    },
   };
 
   admin
