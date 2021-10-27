@@ -116,13 +116,14 @@ app.post("/sendNotification", (req, res) => {
     },
     android: {
       notification: {
-        sound: "default",
+        sound: "doctor4u.wav",
+        channel_id: "test",
       },
     },
     apns: {
       payload: {
         aps: {
-          sound: "default",
+          sound: "doctor4u.wav",
         },
       },
     },
